@@ -1,0 +1,18 @@
+name: hasura_core
+description: A new Flutter package project.
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  http: ^0.12.0+4
+  websocket: ^0.0.5
+  uuid: ^2.0.4
+
+dev_dependencies:
+  effective_dart: ^1.2.1
+  flutter_test:
+    sdk: flutter
