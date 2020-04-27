@@ -4,7 +4,7 @@ Connect your Flutter/Dart apps to Hasura simply.
 
 ## What can he do
 
-  The hasura_core is designed to facilitate Hasura's integration with Flutter applications, leveraging the full power of Graphql.
+  The hasura_core is designed to facilitate Hasura's integration with Dart applications, leveraging the full power of Graphql.
 
 - Use Query, Mutation and Subscriptions the easy way.
 - Offline cache for Subscription and Mutation made from a Snapshot.
@@ -139,10 +139,6 @@ HasuraCore hasuraCore = HasuraCore(url, token: (isError) async {
 ## Custom Database by Delegate
 
 You can add others database to work with cache using **localStorageDelegate** param in **HasuraCore** construct.
-
-This library have two delegates:
-- **LocalStorageSharedPreferences** (default) 
-- **LocalStorageHive** (Using Hive Database for Desktops)
 
 Implements **LocalStorage** interface and use any Database:
 
