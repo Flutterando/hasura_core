@@ -25,22 +25,28 @@ class HasuraCoreBase implements HasuraCore {
   WebSocket _channelPromisse;
   bool _isDisconnected = false;
   bool _isConnected = false;
+  bool _showDebugMessage = false;
+
   Completer<bool> _onConnect = Completer<bool>();
 
   final String url;
 
   Future<String> Function(bool isError) _token;
 
-  HasuraCoreBase(this.url,
-      {Map<String, dynamic> headers,
-      this.localStorageDelegate,
-      Future<String> Function(bool isError) token}) {
+  HasuraCoreBase(
+    this.url, {
+    Map<String, dynamic> headers,
+    this.localStorageDelegate,
+    Future<String> Function(bool isError) token,
+    bool showDebugMessage,
+  }) {
     _token = token;
     _headers = headers ?? <String, String>{};
     _localStorageMutation = localStorageDelegate();
     _localStorageCache = localStorageDelegate();
     _localStorageMutation.init('hasura_mutations');
     _localStorageCache.init('hasura_cache');
+    _showDebugMessage = showDebugMessage;
   }
 
   final _init = {
@@ -195,7 +201,9 @@ class HasuraCoreBase implements HasuraCore {
   }
 
   void _connect() async {
-    print('hasura connecting...');
+    if (_showDebugMessage) {
+      print('hasura connecting...');
+    }
     try {
       _channelPromisse = await WebSocket.connect(url.replaceFirst('http', 'ws'),
           protocols: ['graphql-ws']); //graphql-subscriptions
@@ -211,7 +219,10 @@ class HasuraCoreBase implements HasuraCore {
         if (data['type'] == 'data' || data['type'] == 'error') {
           _controller.add(data);
         } else if (data['type'] == 'connection_ack') {
-          print('HASURA CONNECT!');
+          if (_showDebugMessage) {
+            print('HASURA CONNECT!');
+          }
+
           _isConnected = true;
 
           for (var key in _snapmap.keys) {
@@ -225,13 +236,17 @@ class HasuraCoreBase implements HasuraCore {
             await _sendPost(mutationCache[key], key);
           }
         } else if (data['type'] == 'connection_error') {
-          print('Try again...');
+          if (_showDebugMessage) {
+            print('Try again...');
+          }
           await Future.delayed(Duration(seconds: 2));
           await _addToken(true);
           _channelPromisse.addUtf8Text(jsonEncode(_init).codeUnits);
         } else if (data['type'] == 'ka') {
         } else {
-          print(data);
+          if (_showDebugMessage) {
+            print(data);
+          }
         }
       });
       _sub.onError(print);
@@ -246,7 +261,10 @@ class HasuraCoreBase implements HasuraCore {
         _connect();
       }
     } on Exception catch (e) {
-      print(e);
+      if (_showDebugMessage) {
+        print(e);
+      }
+
       if (!_isDisconnected) {
         await Future.delayed(Duration(milliseconds: 3000));
 
@@ -268,7 +286,9 @@ class HasuraCoreBase implements HasuraCore {
     if (_channelPromisse?.closeCode != null) {
       await _channelPromisse.close();
     }
-    print('disconnected hasura');
+    if (_showDebugMessage) {
+      print('disconnected hasura');
+    }
   }
 
   @override
