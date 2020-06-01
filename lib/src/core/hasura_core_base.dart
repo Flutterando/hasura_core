@@ -35,7 +35,7 @@ class HasuraCoreBase implements HasuraCore {
 
   HasuraCoreBase(
     this.url, {
-    Map<String, dynamic> headers,
+    Map<String, String> headers,
     this.localStorageDelegate,
     Future<String> Function(bool isError) token,
     bool showDebugMessage,

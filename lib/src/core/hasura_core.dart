@@ -7,14 +7,18 @@ abstract class HasuraCore {
   ///[url] -> url to graph client
   ///[header] -> set header elements for request
   ///[token] -> change token jwt
-  factory HasuraCore(String url,
-      {Future<String> Function(bool isError) token,
-      LocalStorage Function() localStorageDelegate,
-      Map<String, String> headers}) {
+  factory HasuraCore(
+    String url, {
+    Future<String> Function(bool isError) token,
+    LocalStorage Function() localStorageDelegate,
+    Map<String, String> headers,
+    bool showDebugMessage = false,
+  }) {
     return HasuraCoreBase(url,
         headers: headers,
         token: token,
-        localStorageDelegate: localStorageDelegate ?? () => NoStorage());
+        localStorageDelegate: localStorageDelegate ?? () => NoStorage(),
+        showDebugMessage: showDebugMessage);
   }
 
   bool get isConnected;
