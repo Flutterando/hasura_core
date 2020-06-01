@@ -232,8 +232,10 @@ class HasuraCoreBase implements HasuraCore {
           }
 
           var mutationCache = await _localStorageMutation.getAll();
-          for (var key in mutationCache?.keys) {
-            await _sendPost(mutationCache[key], key);
+          if (mutationCache != null) {
+            for (var key in mutationCache?.keys) {
+              await _sendPost(mutationCache[key], key);
+            }
           }
         } else if (data['type'] == 'connection_error') {
           if (_showDebugMessage) {
